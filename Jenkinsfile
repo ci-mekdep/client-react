@@ -4,15 +4,15 @@ def InstallBuild(BRANCH, APP_DIR){
     try {
         sh "cp ${APP_DIR}/.env . "
         echo 'Installing Dependencies'
-        sh "SENTRYCLI_CDNURL=https://mekdep.edu.tm/landing-uploads/ CYPRESS_INSTALL_BINARY=/home/akynyaz/cypress.zip npm install"
+        sh "source ~/.bashrc && SENTRYCLI_CDNURL=https://mekdep.edu.tm/landing-uploads/ CYPRESS_INSTALL_BINARY=/home/akynyaz/cypress.zip npm install"
 
         if (BRANCH == 'stable') {
             echo 'Building application'
-            sh "npm run build"
+            sh "source ~/.bashrc && npm run build"
             sh "cp -R .next public node_modules package.json package-lock.json ${OUT_DIR}"
         } else {
             echo 'Building application'
-            sh "npm run build"
+            sh "source ~/.bashrc && npm run build"
         }
     }
     catch (Exception e) {
@@ -27,10 +27,10 @@ def Deploy(Branch, APP_NAME) {
         echo 'Restarting application'
         if (env.BRANCH_NAME == 'stable') {
             sh "bash deploy.sh ${Branch} ${APP_NAME} "
-            sh "pm2 restart ${APP_NAME}_web"
+            sh "source ~/.bashrc && pm2 restart ${APP_NAME}_web"
         } else {
             sh "bash deploy.sh ${Branch} "
-            sh "pm2 restart ${APP_NAME}"
+            sh "source ~/.bashrc && pm2 restart ${APP_NAME}"
         }
     } catch (Exception e) {
         echo "Deployment Failed for  ${APP_NAME}, REASION: ${e}"
@@ -44,11 +44,11 @@ def rollback(Branch, APP_NAME) {
         echo "Deploying for ${Branch}"
         sh "bash rollback.sh ${Branch} ${APP_NAME}"
         echo 'Restarting application'
-        sh "pm2 restart ${APP_NAME}_web"
+        sh "source ~/.bashrc && pm2 restart ${APP_NAME}_web"
     } else {
         sh "bash rollback.sh ${Branch}"
         echo 'Restarting application'
-        sh "pm2 restart ${APP_NAME}"
+        sh "source ~/.bashrc && pm2 restart ${APP_NAME}"
     }
     error("Jenkins pipeline for ${APP_NAME}, successfully rollback.")
 }
