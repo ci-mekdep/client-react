@@ -4,15 +4,15 @@ def InstallBuild(BRANCH, APP_DIR){
     try {
         sh "cp ${APP_DIR}/.env . "
         echo 'Installing Dependencies'
-        sh "export PATH=/usr/local/node-v22.11.0/bin:$PATH && SENTRYCLI_CDNURL=https://mekdep.edu.tm/landing-uploads/ CYPRESS_INSTALL_BINARY=/home/akynyaz/cypress.zip npm install"
+        sh "SENTRYCLI_CDNURL=https://mekdep.edu.tm/landing-uploads/ CYPRESS_INSTALL_BINARY=/home/akynyaz/cypress.zip npm install"
 
         if (BRANCH == 'stable') {
             echo 'Building application'
-            sh "export PATH=/usr/local/node-v22.11.0/bin:$PATH && npm run build"
+            sh "npm run build"
             sh "cp -R .next public node_modules package.json package-lock.json ${OUT_DIR}"
         } else {
             echo 'Building application'
-            sh "export PATH=/usr/local/node-v22.11.0/bin:$PATH && npm run build"
+            sh "npm run build"
         }
     }
     catch (Exception e) {
