@@ -59,7 +59,7 @@ pipeline {
     }
 
     environment {
-        PATH = "PATH=/usr/local/node-v22.11.0/bin:$PATH"
+        PATH = "/usr/local/node-v22.11.0/bin:$PATH"
         branch = sh(returnStdout: true, script: 'git branch --show-current').trim()
     }
 
