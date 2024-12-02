@@ -128,39 +128,5 @@ pipeline {
         }
     }
 
-    post {
-        success {
-            script {
-                echo "Current branch: ${env.BRANCH_NAME}"
-                SCB = "branch: ${env.BRANCH_NAME}"
 
-                def lastSuccessBuild = Jenkins.instance.getItemByFullName("${env.JOB_NAME}")?.lastSuccessfulBuild
-                def lastSuccessBuildTime = lastSuccessBuild?.getTimestamp()?.format('yyyy-MM-dd HH:mm:ss')
-                echo "Last Successful Build Name: ${lastSuccessBuild}"
-                LastSuccessName = "${lastSuccessBuild?.displayName ?: 'No Previous Success'}"
-                LastSuccessTime = lastSuccessBuildTime ?: 'NA'
-                echo "Test for branch ${env.BRANCH_NAME}"
-            }
-
-            mattermostSend(
-                message: " App build: '${env.JOB_NAME}' ${SCB} \n Status: **Success** [#${env.BUILD_NUMBER}](${env.BUILD_URL}/console)\n Last Successful Build id: [${LastSuccessName}](https://ci.mekdep.org/job/react-js/job/${env.BRANCH_NAME}/) time: [${LastSuccessTime}](https://ci.mekdep.org/job/react-js/job/${env.BRANCH_NAME}/lastSuccessfulBuild/)\n ChangeLog: [Link](https://ci.mekdep.org/job/react-js/job/${env.BRANCH_NAME})\n"
-            )
-        }
-        failure {
-            script {
-                echo "Current branch: ${env.BUILD_NUMBER}"
-                SCB = "branch: ${env.BUILD_NUMBER}"
-                def lastSuccessBuild = Jenkins.instance.getItemByFullName("${env.JOB_NAME}")?.lastSuccessfulBuild
-                def lastSuccessBuildTime = lastSuccessBuild?.getTimestamp()?.format('yyyy-MM-dd HH:mm:ss')
-                echo "Last Successful Build Name: ${lastSuccessBuild}"
-                LastSuccessName = "${lastSuccessBuild?.displayName ?: 'No Previous Success'}"
-                LastSuccessTime = lastSuccessBuildTime ?: 'NA'
-                echo "Test for branch ${env.BRANCH_NAME}"
-            }
-            mattermostSend(
-                color: '#FF0000',
-                message: " App build: '${env.JOB_NAME}' ${SCB} \n Status: **Failed** [#${env.BUILD_NUMBER}](${env.BUILD_URL}/console)\n Last Successful Build id: [${LastSuccessName}](https://ci.mekdep.org/job/react-js/job/${env.BRANCH_NAME}/) time: [${LastSuccessTime}](https://ci.mekdep.org/job/react-js/job/${env.BRANCH_NAME}/lastSuccessfulBuild/)\n ChangeLog: [Link](https://ci.mekdep.org/job/react-js/job/${env.BRANCH_NAME})\n"
-            )
-        }
-    }
 }
